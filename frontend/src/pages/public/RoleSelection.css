@@ -1,0 +1,252 @@
+.welcome-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    color: #203c2a;
+    background: radial-gradient(ellipse at 10% 40%, #edf1e3 0%, transparent 43%), #faf9f4;
+}
+
+.welcome-header {
+    min-height: 78px;
+    padding: 18px 7%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    border-bottom: 1px solid #e9ebdf;
+}
+
+.welcome-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 25px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    color: #234d34;
+    text-decoration: none;
+}
+
+.welcome-logo {
+    font-size: 29px;
+}
+
+.welcome-brand>span:last-child {
+    color: #84975a;
+}
+
+.welcome-tagline {
+    color: #7b8577;
+    font-size: 12px;
+}
+
+.welcome-content {
+    flex: 1;
+    width: min(1120px, 86%);
+    margin: 0 auto;
+    padding: 65px 0;
+    display: grid;
+    grid-template-columns: 1fr 0.85fr;
+    align-items: center;
+    gap: 75px;
+}
+
+.welcome-eyebrow,
+.role-panel-label {
+    color: #74884d;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.7px;
+}
+
+.welcome-copy h1 {
+    margin: 20px 0;
+    font-size: clamp(38px, 4.4vw, 58px);
+    line-height: 1.15;
+    letter-spacing: -2.6px;
+    font-weight: 800;
+}
+
+.welcome-copy h1 span {
+    color: #81945b;
+}
+
+.welcome-copy>p {
+    max-width: 470px;
+    color: #737d70;
+    font-size: 15px;
+    line-height: 1.9;
+}
+
+.welcome-points {
+    display: grid;
+    gap: 15px;
+    margin-top: 30px;
+    color: #486347;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.role-panel {
+    padding: 32px;
+    background: #fff;
+    border: 1px solid #e7e9de;
+    border-radius: 17px;
+    box-shadow: 0 20px 65px #28432b0b;
+}
+
+.role-panel h2 {
+    margin: 14px 0 8px;
+    font-size: 25px;
+    letter-spacing: -0.7px;
+}
+
+.role-panel-description {
+    margin-bottom: 24px;
+    color: #7a8276;
+    font-size: 13px;
+}
+
+.role-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 13px;
+    padding: 17px 14px;
+    margin-top: 12px;
+    border: 1px solid #e5e9df;
+    border-radius: 11px;
+    color: #25452f;
+    text-decoration: none;
+    transition: border-color 0.2s, background 0.2s, transform 0.2s;
+}
+
+.role-option:hover {
+    border-color: #9eaf85;
+    background: #fafcf7;
+    transform: translateY(-2px);
+}
+
+.role-option-icon {
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    width: 43px;
+    height: 43px;
+    border-radius: 10px;
+    background: #eef2e6;
+    font-size: 22px;
+}
+
+.role-option-copy {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.role-option-copy strong {
+    font-size: 14px;
+}
+
+.role-option-copy small {
+    color: #788175;
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+.role-register {
+    color: #628044;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.role-arrow {
+    margin-top: 12px;
+    color: #66824b;
+    font-size: 20px;
+}
+
+.welcome-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 24px 0 15px;
+    color: #9a9f92;
+    font-size: 10px;
+}
+
+.welcome-divider::before,
+.welcome-divider::after {
+    content: "";
+    height: 1px;
+    flex: 1;
+    background: #e8e9e0;
+}
+
+.browse-link {
+    display: block;
+    text-align: center;
+    color: #416b44;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.browse-link span {
+    margin-left: 5px;
+}
+
+.welcome-footer {
+    padding: 22px 7%;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    border-top: 1px solid #e9ebdf;
+    color: #798374;
+    font-size: 11px;
+}
+
+@media (max-width: 850px) {
+    .welcome-content {
+        grid-template-columns: 1fr;
+        gap: 38px;
+        width: min(550px, 88%);
+        padding: 48px 0;
+    }
+    .welcome-copy h1 {
+        font-size: 43px;
+    }
+    .role-panel {
+        padding: 25px;
+    }
+}
+
+@media (max-width: 480px) {
+    .welcome-header {
+        padding: 16px 5%;
+    }
+    .welcome-brand {
+        font-size: 21px;
+    }
+    .welcome-tagline {
+        display: none;
+    }
+    .welcome-content {
+        width: 90%;
+        padding: 38px 0;
+    }
+    .welcome-copy h1 {
+        font-size: 37px;
+        letter-spacing: -1.5px;
+    }
+    .role-panel {
+        padding: 20px;
+    }
+    .role-panel h2 {
+        font-size: 22px;
+    }
+    .welcome-footer {
+        padding: 18px 5%;
+    }
+}

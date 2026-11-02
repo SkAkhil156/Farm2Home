@@ -1,0 +1,191 @@
+.edit-product-page {
+    min-height: 100vh;
+    padding: 32px;
+    background: #f5f7ef;
+    color: #26372a;
+    font-family: Inter, Arial, sans-serif;
+}
+
+.edit-product-header,
+.edit-product-form {
+    max-width: 950px;
+    margin: 0 auto;
+}
+
+.edit-product-header {
+    margin-bottom: 24px;
+}
+
+.edit-product-header>a {
+    color: #245438;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.edit-product-eyebrow {
+    margin-top: 25px;
+    color: #74836f;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.4px;
+}
+
+.edit-product-header h1 {
+    margin: 8px 0;
+    font-size: clamp(27px, 4vw, 36px);
+}
+
+.edit-product-header p:last-child,
+.edit-product-card>p {
+    color: #74836f;
+    line-height: 1.6;
+}
+
+.edit-product-form {
+    display: grid;
+    gap: 20px;
+}
+
+.edit-product-card {
+    padding: 27px;
+    background: white;
+    border: 1px solid #e4e9dd;
+    border-radius: 16px;
+}
+
+.edit-product-card h2 {
+    margin: 0 0 22px;
+    font-size: 20px;
+}
+
+.edit-product-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.edit-product-grid label {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    color: #344b38;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.edit-product-grid input,
+.edit-product-grid select,
+.edit-product-grid textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    border: 1px solid #dce4d7;
+    border-radius: 9px;
+    background: white;
+    color: #26372a;
+    font: inherit;
+    font-size: 14px;
+}
+
+.edit-product-grid input:focus,
+.edit-product-grid select:focus,
+.edit-product-grid textarea:focus {
+    outline: 2px solid #c6dfc0;
+    border-color: #548b5d;
+}
+
+.edit-product-grid textarea {
+    resize: vertical;
+}
+
+.edit-product-full {
+    grid-column: 1 / -1;
+}
+
+.edit-product-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.edit-product-checkbox input {
+    width: 17px;
+    height: 17px;
+    accent-color: #245438;
+}
+
+.edit-product-error {
+    padding: 14px;
+    border-radius: 9px;
+    background: #fff0ed;
+    color: #a13d32;
+    line-height: 1.6;
+}
+
+.edit-product-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 20px;
+    border: 1px solid #e4e9dd;
+    border-radius: 13px;
+    background: white;
+}
+
+.edit-product-cancel,
+.edit-product-actions button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 11px 18px;
+    border-radius: 9px;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.edit-product-cancel {
+    border: 1px solid #dce4d7;
+    color: #425446;
+    background: white;
+}
+
+.edit-product-actions button {
+    border: none;
+    background: #245438;
+    color: white;
+}
+
+.edit-product-actions button:disabled {
+    opacity: 0.65;
+    cursor: wait;
+}
+
+@media (max-width: 650px) {
+    .edit-product-page {
+        padding: 18px 12px;
+    }
+    .edit-product-card {
+        padding: 19px 15px;
+    }
+    .edit-product-grid {
+        grid-template-columns: 1fr;
+    }
+    .edit-product-full {
+        grid-column: auto;
+    }
+    .edit-product-actions {
+        flex-direction: column-reverse;
+    }
+    .edit-product-actions a,
+    .edit-product-actions button {
+        width: 100%;
+        box-sizing: border-box;
+    }
+}

@@ -1,0 +1,159 @@
+
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+
+// Public pages
+import RoleSelection from "./pages/public/RoleSelection";
+import Login from "./pages/public/Login";
+import Register from "./pages/public/Register";
+
+// Customer pages
+import Shop from "./pages/customer/Shop";
+
+// Farmer pages
+import FarmerDashboard from "./pages/farmer/FarmerDashboard";
+import MyProducts from "./pages/farmer/MyProducts";
+import AddProduct from "./pages/farmer/AddProduct";
+import EditProduct from "./pages/farmer/EditProduct";
+import FarmerOrders from "./pages/farmer/FarmerOrders";
+
+// Admin pages
+import AdminLogin from "./admin/pages/AdminLogin";
+import AdminDashboard from "./admin/pages/AdminDashboard";
+
+// Route protection
+import ProtectedRoute from "./routes/ProtectedRoute";
+
+// Temporary page for features under development
+function ComingSoon({ title }) {
+  return (
+    <main
+      style={{
+        minHeight: "100vh",
+        display: "grid",
+        placeContent: "center",
+        textAlign: "center",
+        padding: 24,
+        fontFamily: "Arial, sans-serif",
+        color: "#245438",
+        background: "#faf8ef",
+      }}
+    >
+      <h1>🌱 Farm2Home</h1>
+      <h2>{title}</h2>
+      <p>This page is under development.</p>
+      <a href="/" style={{ color: "#38764a" }}>
+        ← Back to home
+      </a>
+    </main>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        {/* ================= PUBLIC ROUTES ================= */}
+
+        <Route path="/" element={<RoleSelection />} />
+
+        <Route path="/login/:role" element={<Login />} />
+
+        <Route path="/register/:role" element={<Register />} />
+
+        {/* ================= CUSTOMER ROUTES ================= */}
+
+        <Route
+          path="/shop"
+          element={
+            <ProtectedRoute allowedRole="customer">
+              <Shop />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* ================= FARMER ROUTES ================= */}
+
+        <Route
+          path="/farmer/dashboard"
+          element={
+            <ProtectedRoute allowedRole="farmer">
+              <FarmerDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/farmer/products"
+          element={
+            <ProtectedRoute allowedRole="farmer">
+              <MyProducts />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/farmer/products/add"
+          element={
+            <ProtectedRoute allowedRole="farmer">
+              <AddProduct />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/farmer/products/edit/:id"
+          element={
+            <ProtectedRoute allowedRole="farmer">
+              <EditProduct />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/farmer/orders"
+          element={
+            <ProtectedRoute allowedRole="farmer">
+              <FarmerOrders />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/farmer/profile"
+          element={
+            <ProtectedRoute allowedRole="farmer">
+              <ComingSoon title="Farmer Profile" />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* ================= ADMIN ROUTES ================= */}
+
+        {/* Admin login */}
+        <Route
+          path="/admin/login"
+          element={<AdminLogin />}
+        />
+
+        {/* Admin dashboard: admin role required */}
+        <Route
+          path="/admin/dashboard"
+          element={
+            <ProtectedRoute allowedRole="admin">
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* ================= UNKNOWN ROUTES ================= */}
+
+        <Route
+          path="*"
+          element={<Navigate to="/" replace />}
+        />
+      </Routes>
+    </BrowserRouter>
+  );
+}
+
+export default App;
