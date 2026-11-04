@@ -1,4 +1,3 @@
-
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../../api/axios";
@@ -44,6 +43,10 @@ function Shop() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
+    const [addingProductId, setAddingProductId] = useState(null);
+    const [cartMessage, setCartMessage] = useState("");
+    const [cartError, setCartError] = useState("");
+
     useEffect(() => {
         let active = true;
 
@@ -87,11 +90,14 @@ function Shop() {
         return products.filter((product) => {
             const matchesSearch =
                 !query ||
-                [product.name, product.description, product.category,
-                getFarmerName(product)]
-                    .some((value) =>
-                        String(value || "").toLowerCase().includes(query)
-                    );
+                [
+                    product.name,
+                    product.description,
+                    product.category,
+                    getFarmerName(product),
+                ].some((value) =>
+                    String(value || "").toLowerCase().includes(query)
+                );
 
             const matchesCategory =
                 selectedCategory === "all" ||
@@ -111,12 +117,53 @@ function Shop() {
         navigate("/", { replace: true });
     }
 
+    async function handleAddToCart(product) {
+        const productId = product._id || product.id;
+
+        if (!productId) {
+            setCartError("This product does not have a valid product ID.");
+            setCartMessage("");
+            return;
+        }
+
+        try {
+            setAddingProductId(productId);
+            setCartMessage("");
+            setCartError("");
+
+            const response = await api.post("/cart/items", {
+                productId,
+                quantity: 1,
+            });
+
+            setCartMessage(
+                response.data?.message ||
+                `${product.name} added to your cart successfully!`
+            );
+        } catch (err) {
+            if (err.response?.status === 401) {
+                setCartError("Please log in as a customer to add products to your cart.");
+            } else if (err.response?.status === 403) {
+                setCartError("Only customer accounts can add products to the cart.");
+            } else {
+                setCartError(
+                    err.response?.data?.message ||
+                    "Unable to add this product to your cart. Please try again."
+                );
+            }
+        } finally {
+            setAddingProductId(null);
+        }
+    }
+
     return (
         <div className="shop-page">
             <header className="shop-header">
                 <Link to="/" className="shop-brand">
                     <span className="brand-icon">🌱</span>
-                    <span>Farm<span className="brand-highlight">2</span>Home</span>
+                    <span>
+                        Farm<span className="brand-highlight">2</span>Home
+                    </span>
                 </Link>
 
                 <div className="shop-header-right">
@@ -131,7 +178,11 @@ function Shop() {
                 <section className="shop-hero">
                     <div className="hero-content">
                         <span className="hero-eyebrow">🌾 GROWN WITH CARE</span>
-                        <h1>Fresh from farmers.<br />Delivered to you.</h1>
+                        <h1>
+                            Fresh from farmers.
+                            <br />
+                            Delivered to you.
+                        </h1>
                         <p>
                             Discover fresh farm produce and support local farmers
                             with every purchase.
@@ -150,6 +201,7 @@ function Shop() {
                                 <button
                                     onClick={() => setSearch("")}
                                     aria-label="Clear search"
+                                    type="button"
                                 >
                                     ✕
                                 </button>
@@ -169,8 +221,11 @@ function Shop() {
                         <div>
                             <span className="section-kicker">FROM OUR FARMS</span>
                             <h2>Explore fresh produce</h2>
-                            <p>Good food, fair prices, and a direct connection to farmers.</p>
+                            <p>
+                                Good food, fair prices, and a direct connection to farmers.
+                            </p>
                         </div>
+
                         <span className="product-count">
                             {filteredProducts.length} products
                         </span>
@@ -180,6 +235,7 @@ function Shop() {
                         {categories.map((category) => (
                             <button
                                 key={category.value}
+                                type="button"
                                 className={`category-button ${selectedCategory === category.value ? "active" : ""
                                     }`}
                                 onClick={() => setSelectedCategory(category.value)}
@@ -189,6 +245,18 @@ function Shop() {
                             </button>
                         ))}
                     </div>
+
+                    {cartMessage && (
+                        <div className="cart-feedback cart-success" role="status">
+                            {cartMessage}
+                        </div>
+                    )}
+
+                    {cartError && (
+                        <div className="cart-feedback cart-error" role="alert">
+                            {cartError}
+                        </div>
+                    )}
 
                     {loading && (
                         <div className="shop-message">
@@ -202,7 +270,7 @@ function Shop() {
                             <span>⚠️</span>
                             <h3>Couldn't load products</h3>
                             <p>{error}</p>
-                            <button onClick={() => window.location.reload()}>
+                            <button onClick={() => window.location.reload()} type="button">
                                 Try again
                             </button>
                         </div>
@@ -212,8 +280,11 @@ function Shop() {
                         <div className="shop-message">
                             <span className="empty-icon">🧺</span>
                             <h3>No products found</h3>
-                            <p>Try another search or choose a different category.</p>
+                            <p>
+                                Try another search or choose a different category.
+                            </p>
                             <button
+                                type="button"
                                 onClick={() => {
                                     setSearch("");
                                     setSelectedCategory("all");
@@ -226,65 +297,112 @@ function Shop() {
 
                     {!loading && !error && filteredProducts.length > 0 && (
                         <div className="product-grid">
-                            {filteredProducts.map((product) => (
-                                <article className="product-card" key={product._id || product.id}>
-                                    <div className="product-image-wrap">
-                                        {product.imageUrl ? (
-                                            <img
-                                                src={product.imageUrl}
-                                                alt={product.name}
-                                                className="product-image"
-                                                loading="lazy"
-                                            />
-                                        ) : (
-                                            <div className="product-image-placeholder">
-                                                {product.category === "fruits" ? "🥭" :
-                                                    product.category === "vegetables" ? "🥬" :
-                                                        product.category === "grains" ? "🌾" :
-                                                            product.category === "pulses" ? "🫘" :
-                                                                product.category === "dairy" ? "🥛" :
-                                                                    product.category === "spices" ? "🌶️" : "🌱"}
-                                            </div>
-                                        )}
-                                        <span className="organic-label">Farm fresh</span>
-                                    </div>
+                            {filteredProducts.map((product) => {
+                                const productId = product._id || product.id;
+                                const stock = Number(product.quantity);
+                                const isOutOfStock =
+                                    !Number.isFinite(stock) || stock <= 0;
+                                const isAdding = addingProductId === productId;
 
-                                    <div className="product-details">
-                                        <span className="product-category">
-                                            {product.category || "Farm produce"}
-                                        </span>
-                                        <h3>{product.name}</h3>
-                                        <p className="farmer-name">
-                                            👨‍🌾 {getFarmerName(product)}
-                                        </p>
-
-                                        <div className="product-price-row">
-                                            <div>
-                                                <span className="product-price">
-                                                    ₹{Number(product.price).toLocaleString("en-IN", {
-                                                        minimumFractionDigits: 2,
-                                                        maximumFractionDigits: 2,
-                                                    })}
-                                                </span>
-                                                <span className="product-unit">
-                                                    / {product.unit || "unit"}
-                                                </span>
-                                            </div>
-                                            <span className="stock-label">
-                                                {Number(product.quantity) > 0
-                                                    ? "In stock"
-                                                    : "Check stock"}
+                                return (
+                                    <article
+                                        className="product-card"
+                                        key={productId}
+                                    >
+                                        <div className="product-image-wrap">
+                                            {product.imageUrl ? (
+                                                <img
+                                                    src={product.imageUrl}
+                                                    alt={product.name}
+                                                    className="product-image"
+                                                    loading="lazy"
+                                                />
+                                            ) : (
+                                                <div className="product-image-placeholder">
+                                                    {product.category === "fruits"
+                                                        ? "🥭"
+                                                        : product.category === "vegetables"
+                                                            ? "🥬"
+                                                            : product.category === "grains"
+                                                                ? "🌾"
+                                                                : product.category === "pulses"
+                                                                    ? "🫘"
+                                                                    : product.category === "dairy"
+                                                                        ? "🥛"
+                                                                        : product.category === "spices"
+                                                                            ? "🌶️"
+                                                                            : "🌱"}
+                                                </div>
+                                            )}
+                                            <span className="organic-label">
+                                                Farm fresh
                                             </span>
                                         </div>
 
-                                        {product.description && (
-                                            <p className="product-description">
-                                                {product.description}
+                                        <div className="product-details">
+                                            <span className="product-category">
+                                                {product.category || "Farm produce"}
+                                            </span>
+
+                                            <h3>{product.name}</h3>
+
+                                            <p className="farmer-name">
+                                                👨‍🌾 {getFarmerName(product)}
                                             </p>
-                                        )}
-                                    </div>
-                                </article>
-                            ))}
+
+                                            <div className="product-price-row">
+                                                <div>
+                                                    <span className="product-price">
+                                                        ₹
+                                                        {Number(product.price).toLocaleString(
+                                                            "en-IN",
+                                                            {
+                                                                minimumFractionDigits: 2,
+                                                                maximumFractionDigits: 2,
+                                                            }
+                                                        )}
+                                                    </span>
+                                                    <span className="product-unit">
+                                                        / {product.unit || "unit"}
+                                                    </span>
+                                                </div>
+
+                                                <span
+                                                    className={`stock-label ${isOutOfStock ? "out-of-stock-label" : ""
+                                                        }`}
+                                                >
+                                                    {isOutOfStock
+                                                        ? "Out of stock"
+                                                        : `${stock} ${product.unit || "units"} available`}
+                                                </span>
+                                            </div>
+
+                                            {product.description && (
+                                                <p className="product-description">
+                                                    {product.description}
+                                                </p>
+                                            )}
+
+                                            <div className="product-actions">
+                                                <button
+                                                    className="add-cart-button"
+                                                    type="button"
+                                                    onClick={() =>
+                                                        handleAddToCart(product)
+                                                    }
+                                                    disabled={isOutOfStock || isAdding}
+                                                >
+                                                    {isAdding
+                                                        ? "Adding..."
+                                                        : isOutOfStock
+                                                            ? "Out of Stock"
+                                                            : "🛒 Add to Cart"}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </article>
+                                );
+                            })}
                         </div>
                     )}
                 </section>
@@ -292,7 +410,9 @@ function Shop() {
 
             <footer className="shop-footer">
                 <span>🌱 Farm2Home</span>
-                <p>Connecting farmers and customers, one harvest at a time.</p>
+                <p>
+                    Connecting farmers and customers, one harvest at a time.
+                </p>
             </footer>
         </div>
     );

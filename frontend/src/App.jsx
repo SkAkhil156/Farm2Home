@@ -1,29 +1,36 @@
 
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 
-// Public pages
+// ================= PUBLIC PAGES =================
 import RoleSelection from "./pages/public/RoleSelection";
 import Login from "./pages/public/Login";
 import Register from "./pages/public/Register";
 
-// Customer pages
+// ================= CUSTOMER PAGES =================
 import Shop from "./pages/customer/Shop";
+import Cart from "./pages/customer/Cart";
+import Checkout from "./pages/customer/Checkout";
 
-// Farmer pages
+// ================= FARMER PAGES =================
 import FarmerDashboard from "./pages/farmer/FarmerDashboard";
 import MyProducts from "./pages/farmer/MyProducts";
 import AddProduct from "./pages/farmer/AddProduct";
 import EditProduct from "./pages/farmer/EditProduct";
 import FarmerOrders from "./pages/farmer/FarmerOrders";
 
-// Admin pages
+// ================= ADMIN PAGES =================
 import AdminLogin from "./admin/pages/AdminLogin";
 import AdminDashboard from "./admin/pages/AdminDashboard";
 
-// Route protection
+// ================= ROUTE PROTECTION =================
 import ProtectedRoute from "./routes/ProtectedRoute";
 
-// Temporary page for features under development
+// ================= TEMPORARY PAGE =================
 function ComingSoon({ title }) {
   return (
     <main
@@ -41,6 +48,7 @@ function ComingSoon({ title }) {
       <h1>🌱 Farm2Home</h1>
       <h2>{title}</h2>
       <p>This page is under development.</p>
+
       <a href="/" style={{ color: "#38764a" }}>
         ← Back to home
       </a>
@@ -48,25 +56,63 @@ function ComingSoon({ title }) {
   );
 }
 
+// ================= MAIN APP =================
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+
         {/* ================= PUBLIC ROUTES ================= */}
 
-        <Route path="/" element={<RoleSelection />} />
+        <Route
+          path="/"
+          element={<RoleSelection />}
+        />
 
-        <Route path="/login/:role" element={<Login />} />
+        <Route
+          path="/login/:role"
+          element={<Login />}
+        />
 
-        <Route path="/register/:role" element={<Register />} />
+        <Route
+          path="/register/:role"
+          element={<Register />}
+        />
 
         {/* ================= CUSTOMER ROUTES ================= */}
 
+        {/* Public product browsing */}
         <Route
           path="/shop"
+          element={<Shop />}
+        />
+
+        {/* Customer shopping cart */}
+        <Route
+          path="/customer/cart"
           element={
             <ProtectedRoute allowedRole="customer">
-              <Shop />
+              <Cart />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Customer checkout */}
+        <Route
+          path="/customer/checkout"
+          element={
+            <ProtectedRoute allowedRole="customer">
+              <Checkout />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Customer order history - upcoming implementation */}
+        <Route
+          path="/customer/orders"
+          element={
+            <ProtectedRoute allowedRole="customer">
+              <ComingSoon title="My Orders" />
             </ProtectedRoute>
           }
         />
@@ -129,13 +175,11 @@ function App() {
 
         {/* ================= ADMIN ROUTES ================= */}
 
-        {/* Admin login */}
         <Route
           path="/admin/login"
           element={<AdminLogin />}
         />
 
-        {/* Admin dashboard: admin role required */}
         <Route
           path="/admin/dashboard"
           element={
@@ -151,6 +195,7 @@ function App() {
           path="*"
           element={<Navigate to="/" replace />}
         />
+
       </Routes>
     </BrowserRouter>
   );
